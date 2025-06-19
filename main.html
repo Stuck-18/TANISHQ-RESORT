@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TANISHQ RESORT - Hotel Management</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .navbar {
+            background: #6366f1;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+            padding: 0;
+        }
+        .nav-title {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: #fff;
+            background: linear-gradient(90deg, #ffd700 10%, #fffbe7 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            text-shadow: 0 2px 16px #ffd70055, 0 1px 0 #fffbe7;
+            padding: 28px 0 10px 0;
+            transition: text-shadow 0.3s, filter 0.3s;
+            cursor: pointer;
+        }
+        .nav-title:hover, .nav-title:focus {
+            filter: drop-shadow(0 0 8px #ffd700cc);
+            text-shadow: 0 4px 24px #ffd70099, 0 1px 0 #fffbe7;
+        }
+        .nav-divider {
+            width: 100%;
+            height: 1.5px;
+            background: linear-gradient(90deg, #facc15 0%, #6366f1 100%);
+            opacity: 0.25;
+            margin-bottom: 0.5rem;
+        }
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+            background: none;
+            padding-bottom: 8px;
+        }
+        .nav-tab {
+            color: #fff;
+            background: transparent;
+            border: none;
+            font-size: 1.08rem;
+            font-weight: 500;
+            padding: 13px 32px 11px 32px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            border-bottom: 3px solid transparent;
+            border-radius: 8px 8px 0 0;
+            margin: 0 2px;
+            position: relative;
+        }
+        .nav-tab.active, .nav-tab:hover {
+            background: #4f46e5;
+            color: #ffd700;
+            border-bottom: 3px solid #ffd700;
+            box-shadow: 0 4px 16px #6366f133;
+            z-index: 2;
+        }
+        .main-content {
+            max-width: 600px;
+            margin: 36px auto 0 auto;
+            background: #fff;
+            padding: 36px 36px 32px 36px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(60, 72, 100, 0.12), 0 1.5px 4px rgba(60, 72, 100, 0.08);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-weight: 600;
+            font-size: 2rem;
+            color: #2d3a4a;
+            letter-spacing: 0.5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 500;
+            color: #3b4252;
+            font-size: 1rem;
+        }
+        input, select {
+            width: 100%;
+            padding: 11px 12px;
+            margin-bottom: 20px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            background: #f9fafb;
+            font-size: 1rem;
+            font-family: 'Poppins', Arial, sans-serif;
+            transition: border 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        input:focus, select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 2px #6366f133;
+        }
+        input[type="file"] {
+            padding: 4px 0 4px 0;
+            background: none;
+        }
+        button, .btn {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.08);
+            transition: background 0.2s, transform 0.1s;
+            margin-bottom: 10px;
+        }
+        button:hover, .btn:hover {
+            background: linear-gradient(90deg, #4f46e5 0%, #2563eb 100%);
+            transform: translateY(-2px) scale(1.01);
+        }
+        .success {
+            color: #22c55e;
+            text-align: center;
+            margin-top: 14px;
+            font-weight: 500;
+            font-size: 1.05rem;
+        }
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+        th, td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+        th {
+            background: #f3f4f6;
+            font-weight: 600;
+        }
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .filter-bar input, .filter-bar select {
+            width: auto;
+            min-width: 120px;
+            margin-bottom: 0;
+        }
+        @media (max-width: 700px) {
+            .main-content {
+                padding: 18px 8px 18px 8px;
+                max-width: 98vw;
+            }
+            .nav-title {
+                font-size: 1.2rem;
+                padding: 18px 0 6px 0;
+            }
+            .nav-tab {
+                font-size: 0.95rem;
+                padding: 10px 10px 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-title" tabindex="0">TANISHQ RESORT</div>
+        <div class="nav-divider"></div>
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-section="booking-entry">Booking Entry</button>
+            <button class="nav-tab" data-section="active-bookings">Active Bookings</button>
+            <button class="nav-tab" data-section="past-bookings">Past Bookings</button>
+            <button class="nav-tab" data-section="financial-reports">Financial Reports</button>
+        </div>
+    </nav>
+    <div class="main-content">
+        <!-- Booking Entry Section -->
+        <section class="section active" id="booking-entry">
+            <h2>Booking Entry</h2>
+            <form id="bookingForm" autocomplete="off">
+                <label for="guestName">Guest Name</label>
+                <input type="text" id="guestName" name="guestName" placeholder="Enter guest's full name" required>
+
+                <label for="paymentAmount">Payment Amount</label>
+                <input type="number" id="paymentAmount" name="paymentAmount" placeholder="e.g. 2500" min="0" required>
+
+                <label for="paymentType">Payment Type</label>
+                <select id="paymentType" name="paymentType" required>
+                    <option value="" disabled selected>Select payment type</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Online">Online</option>
+                </select>
+
+                <label for="aadhaarPhoto">Aadhaar Photo</label>
+                <input type="file" id="aadhaarPhoto" name="aadhaarPhoto" accept="image/*" required>
+
+                <label for="roomNumber">Room Number</label>
+                <input type="text" id="roomNumber" name="roomNumber" placeholder="e.g. 101" required>
+
+                <label for="arrivalDate">Arrival Date</label>
+                <input type="date" id="arrivalDate" name="arrivalDate" required>
+
+                <label for="checkoutDate">Checkout Date</label>
+                <input type="date" id="checkoutDate" name="checkoutDate" required>
+
+                <button type="submit">Submit Booking</button>
+            </form>
+            <div class="success" id="successMsg"></div>
+        </section>
+        <!-- Active Bookings Section -->
+        <section class="section" id="active-bookings">
+            <h2>Active Bookings</h2>
+            <div class="filter-bar">
+                <input type="text" id="activeFilterGuest" placeholder="Guest Name">
+                <input type="text" id="activeFilterRoom" placeholder="Room Number">
+                <select id="activeFilterPayment">
+                    <option value="">All Payment Methods</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Online">Online</option>
+                </select>
+                <button class="btn" style="width:auto;" onclick="alert('Filter will work after backend integration')">Filter</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Guest Name</th>
+                            <th>Room</th>
+                            <th>Arrival</th>
+                            <th>Checkout</th>
+                            <th>Payment</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activeBookingsTable">
+                        <tr><td colspan="6" style="text-align:center; color:#888;">(Data will appear here)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Past Bookings Section -->
+        <section class="section" id="past-bookings">
+            <h2>Past Bookings</h2>
+            <div class="filter-bar">
+                <input type="text" id="pastFilterGuest" placeholder="Guest Name">
+                <input type="text" id="pastFilterRoom" placeholder="Room Number">
+                <select id="pastFilterPayment">
+                    <option value="">All Payment Methods</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Online">Online</option>
+                </select>
+                <button class="btn" style="width:auto;" onclick="alert('Filter will work after backend integration')">Filter</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Guest Name</th>
+                            <th>Room</th>
+                            <th>Arrival</th>
+                            <th>Checkout</th>
+                            <th>Payment</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pastBookingsTable">
+                        <tr><td colspan="6" style="text-align:center; color:#888;">(Data will appear here)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!-- Financial Reports Section -->
+        <section class="section" id="financial-reports">
+            <h2>Financial Reports</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-bottom:18px;">
+                <button class="btn" style="width:auto;" onclick="alert('Download will work after backend integration')">Download Daily Report</button>
+                <button class="btn" style="width:auto;" onclick="alert('Download will work after backend integration')">Download Monthly Report</button>
+                <button class="btn" style="width:auto;" onclick="alert('Download will work after backend integration')">Download Full Report</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Total Revenue</th>
+                            <th>Total Rooms Booked</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportSummaryTable">
+                        <tr><td colspan="2" style="text-align:center; color:#888;">(Summary will appear here)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script>
+        // Navigation logic
+        const tabs = document.querySelectorAll('.nav-tab');
+        const sections = document.querySelectorAll('.section');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const sectionId = this.getAttribute('data-section');
+                sections.forEach(sec => sec.classList.remove('active'));
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Booking form logic (same as before, for now)
+        document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const guestName = form.guestName.value;
+            const paymentAmount = form.paymentAmount.value;
+            const paymentType = form.paymentType.value;
+            const roomNumber = form.roomNumber.value;
+            const arrivalDate = form.arrivalDate.value;
+            const checkoutDate = form.checkoutDate.value;
+            const aadhaarPhoto = form.aadhaarPhoto.files[0];
+
+            if (!aadhaarPhoto) {
+                alert('Please upload Aadhaar photo.');
+                return;
+            }
+
+            // Generate unique ID for booking
+            const uniqueId = 'booking_' + Date.now();
+
+            // Prepare booking data
+            const bookingData = {
+                guestName,
+                paymentAmount,
+                paymentType,
+                roomNumber,
+                arrivalDate,
+                checkoutDate,
+                aadhaarPhotoName: aadhaarPhoto.name,
+                id: uniqueId
+            };
+
+            // Save booking data as JSON
+            const bookingBlob = new Blob([JSON.stringify(bookingData, null, 2)], { type: 'application/json' });
+            const photoBlob = aadhaarPhoto;
+
+            // Download booking JSON
+            const bookingUrl = URL.createObjectURL(bookingBlob);
+            const bookingLink = document.createElement('a');
+            bookingLink.href = bookingUrl;
+            bookingLink.download = uniqueId + '.json';
+            bookingLink.click();
+            URL.revokeObjectURL(bookingUrl);
+
+            // Download Aadhaar photo
+            const photoUrl = URL.createObjectURL(photoBlob);
+            const photoLink = document.createElement('a');
+            photoLink.href = photoUrl;
+            photoLink.download = uniqueId + '_' + aadhaarPhoto.name;
+            photoLink.click();
+            URL.revokeObjectURL(photoUrl);
+
+            document.getElementById('successMsg').textContent = 'Booking saved! Please move the downloaded files to the centralized bookings folder.';
+            form.reset();
+        });
+    </script>
+</body>
+</html>
